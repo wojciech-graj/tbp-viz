@@ -1,0 +1,6 @@
+.env
+/out
+/res
+!/res/logo.png
+/target
+meta.json

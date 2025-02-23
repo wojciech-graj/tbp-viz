@@ -1,0 +1,41 @@
+[
+  {
+    "id": "SUBTERRA",
+    "aggregated_rating": 73.64,
+    "aggregated_rating_count": 5684,
+    "cover": {
+      "id": 0,
+      "url": "//cf.geekdo-images.com/47Z9FcLD20NDHdRYUaF_XA__original/img/ZS_FE1Q7_pIsd_XuOWmh_1IR8vI=/0x0/filters:format(png)/pic3904427.png"
+    },
+    "first_release_date": 1483228800,
+    "game_modes": [
+      {
+        "name": "Multiplayer"
+      }
+    ],
+    "genres": [
+      {
+        "name": "Exploration"
+      },
+      {
+        "name": "Adventure"
+      },
+      {
+        "name": "Horror"
+      },
+      {
+        "name": "Maze"
+      }
+    ],
+    "name": "Sub Terra",
+    "release_dates": [
+      {
+        "date": 1483228800
+      }
+    ],
+    "rating": 73.64,
+    "rating_count": 5684,
+    "total_rating": 73.64,
+    "total_rating_count": 5684
+  }
+]

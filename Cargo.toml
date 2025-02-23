@@ -1,0 +1,24 @@
+[package]
+name = "tbp"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.95"
+dotenvy = "0.15.7"
+image = "0.24.9"
+palette = { version = "0.7.6", default-features = false, features = ["std"] }
+plotters = { version = "=0.3.7", default-features = false, features = ["area_series", "bitmap_backend", "bitmap_encoder", "image", "line_series", "point_series", "ttf"] }
+plotters-backend = "=0.3.7"
+reqwest = { version = "0.12.12", features = ["json"] }
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.138"
+serde_repr = "0.1.19"
+serde_with = "3.12.0"
+time = { version = "0.3.37", features = ["macros", "parsing", "formatting", "serde"] }
+tokio = { version = "1.43.0", features = ["macros", "rt-multi-thread"] }
+tracing = "0.1.41"
+tracing-subscriber = "0.3.19"
+
+[patch.crates-io]
+plotters = { path = "dep/plotters" }
