@@ -119,7 +119,9 @@ where
                 draw_segment(
                     root,
                     "Overrated",
-                    data.igdb_diffs().ok_or_else(|| anyhow!("Error"))?[..NUM_OVERRATED]
+                    data.igdb_diffs()
+                        .ok_or_else(|| anyhow!("Could not generate IGDB rating differences."))?
+                        [..NUM_OVERRATED]
                         .iter()
                         .map(|(diff, meta)| {
                             (
@@ -143,7 +145,9 @@ where
         let data = data.clone();
         tasks.spawn_local_on(
             async move {
-                let igdb_diffs = data.igdb_diffs().ok_or_else(|| anyhow!("Error"))?;
+                let igdb_diffs = data
+                    .igdb_diffs()
+                    .ok_or_else(|| anyhow!("Could not generate IGDB rating differences."))?;
                 draw_segment(
                     root,
                     "Underrated",

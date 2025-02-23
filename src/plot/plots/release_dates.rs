@@ -44,7 +44,9 @@ where
     );
 
     let kernel = gaussian_kernel(KERNEL_SIGMA);
-    let (start_date, end_date) = data.release_date_range().ok_or_else(|| anyhow!("Error"))?;
+    let (start_date, end_date) = data
+        .release_date_range()
+        .ok_or_else(|| anyhow!("Could not calculate release date range."))?;
 
     let root = BitMapBackend::new(&path, (WIDTH, HEIGHT)).into_drawing_area();
     root.fill(&Color::BG_PRIMARY)?;

@@ -92,7 +92,10 @@ impl ResourceRequestor {
         .to_vec();
         info!("Downloaded file at {req_url}");
 
-        fs::create_dir_all(path.parent().ok_or_else(|| anyhow!("Error"))?)?;
+        fs::create_dir_all(
+            path.parent()
+                .ok_or_else(|| anyhow!("Filename lacks parent"))?,
+        )?;
         fs::write(path, &res)?;
 
         Ok(res)

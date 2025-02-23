@@ -39,10 +39,10 @@ impl IgdbRequestor {
         }
         if resp.status() != StatusCode::TOO_MANY_REQUESTS {
             resp.error_for_status()?;
-            return Err(anyhow!("error"));
+            unreachable!();
         }
         let Some(request) = request_clone else {
-            return Err(anyhow!("Failed to clone"));
+            return Err(anyhow!("Failed to clone request"));
         };
         warn!("Reached IGDB API rate limit. Sleeping.");
         tokio::time::sleep(Duration::from_secs(60)).await;
@@ -80,7 +80,7 @@ impl IgdbRequestor {
             self.login().await?;
             self.access_token
                 .as_ref()
-                .ok_or_else(|| anyhow!("unreachable"))?
+                .ok_or_else(|| anyhow!("Missing access token"))?
         };
         let limit = ids.len();
         let ids = ids

@@ -280,7 +280,7 @@ impl Data {
 
         let missing_metas = lists
             .latest()
-            .ok_or_else(|| anyhow!("error"))?
+            .ok_or_else(|| anyhow!("Latest list doesn't exist"))?
             .0
             .iter()
             .filter_map(|id| {

@@ -42,7 +42,9 @@ where
         path.as_ref().to_string_lossy()
     );
 
-    let latest_list = data.latest().ok_or_else(|| anyhow!("Error"))?;
+    let latest_list = data
+        .latest()
+        .ok_or_else(|| anyhow!("Latest list doesn't exist"))?;
     let num_games = latest_list.0.len();
     let igdb_list = data.igdb_list(kind);
 
