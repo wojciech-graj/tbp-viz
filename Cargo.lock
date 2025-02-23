@@ -1773,7 +1773,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tbp"
+name = "tbp-viz"
 version = "0.1.0"
 dependencies = [
  "anyhow",

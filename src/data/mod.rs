@@ -361,16 +361,13 @@ impl Data {
     }
 
     /// Most common elements from metas
-    pub fn most_common<'a, FE, FH, I, T: 'a, N>(
-        &'a self,
-        extract: FE,
-        hash: FH,
-    ) -> Vec<(u32, &'a T)>
+    pub fn most_common<'a, FE, FH, I, T, N>(&'a self, extract: FE, hash: FH) -> Vec<(u32, &'a T)>
     where
         FE: Fn(&'a Meta) -> I,
         FH: Fn(&'a T) -> N,
         I: Iterator<Item = &'a T>,
         N: Hash + Eq + 'a,
+        T: 'a,
     {
         let mut values = HashMap::<N, (u32, &T)>::new();
         for value in self.metas.0.values().flat_map(extract) {
