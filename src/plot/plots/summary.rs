@@ -1,14 +1,14 @@
 use std::{fs, path::Path, sync::Arc};
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use plotters::{
     coord::Shift,
     prelude::{BitMapBackend, BitMapElement, DrawingArea, IntoDrawingArea, Rectangle},
     style::{IntoTextStyle, ShapeStyle},
 };
 use plotters_backend::{
-    text_anchor::{HPos, Pos, VPos},
     DrawingBackend,
+    text_anchor::{HPos, Pos, VPos},
 };
 use tokio::task::{JoinSet, LocalSet};
 use tracing::info;
@@ -25,7 +25,8 @@ const HEIGHT: u32 = 1556;
 const NUM_SEGMENTS: u32 = 7;
 const SEGMENT_WIDTH: u32 = WIDTH / NUM_SEGMENTS;
 const MARGIN: u32 = 16;
-const TITLE_HEIGHT: u32 = 80;
+const TITLE_HEIGHT: u32 = 98;
+const SUBTITLE_HEIGHT: u32 = 28;
 const ITEM_GAP: u32 = 16;
 const ITEM_TITLE_HEIGHT: u32 = 32;
 const NUM_OVERRATED: usize = 5;
@@ -63,6 +64,7 @@ where
                 draw_segment(
                     root,
                     "List Toppers",
+                    None,
                     data.extrema(true)
                         .iter()
                         .map(|(id, duration)| {
@@ -91,6 +93,7 @@ where
                 draw_segment(
                     root,
                     "Barrel Bottoms",
+                    None,
                     data.extrema(false)
                         .iter()
                         .map(|(id, duration)| {
@@ -119,6 +122,7 @@ where
                 draw_segment(
                     root,
                     "Overrated",
+                    Some("compared to IGDB ranking"),
                     data.igdb_diffs()
                         .ok_or_else(|| anyhow!("Could not generate IGDB rating differences."))?
                         [..NUM_OVERRATED]
@@ -151,6 +155,7 @@ where
                 draw_segment(
                     root,
                     "Underrated",
+                    Some("compared to IGDB ranking"),
                     igdb_diffs[igdb_diffs.len() - NUM_UNDERRATED..]
                         .iter()
                         .rev()
@@ -179,6 +184,7 @@ where
                 draw_segment(
                     root,
                     "Game Engines",
+                    None,
                     data.most_common(
                         |meta| meta.game_engines.iter(),
                         |game_engine| game_engine.name.as_str(),
@@ -212,6 +218,7 @@ where
                 draw_segment(
                     root,
                     "Companies",
+                    None,
                     data.most_common(
                         |meta| meta.involved_companies.iter(),
                         |involved_company| involved_company.company.name.as_str(),
@@ -246,6 +253,7 @@ where
                 draw_segment(
                     root,
                     "Platforms",
+                    None,
                     data.most_common(
                         |meta| meta.platforms.iter(),
                         |platform| platform.name.as_str(),
@@ -300,6 +308,7 @@ where
 async fn draw_segment<DB>(
     root: DrawingArea<DB, Shift>,
     title: &str,
+    subtitle: Option<&str>,
     items: &[(Option<&str>, String)],
     res: &ResourceRequestor,
     bg: Color,
@@ -321,6 +330,21 @@ where
             .into_text_style(&root),
         (SEGMENT_WIDTH as i32 / 2, 0),
     )?;
+    if let Some(subtitle) = subtitle {
+        root.draw_text(
+            subtitle,
+            &Font::new(FONT_SIZE)
+                .with_anchor::<Color>(Pos {
+                    h_pos: HPos::Center,
+                    v_pos: VPos::Top,
+                })
+                .into_text_style(&root),
+            (
+                SEGMENT_WIDTH as i32 / 2,
+                (TITLE_HEIGHT - SUBTITLE_HEIGHT).try_into().unwrap(),
+            ),
+        )?;
+    }
     root.draw(&Rectangle::new(
         [
             (MARGIN as i32, (TITLE_HEIGHT - 2) as i32),

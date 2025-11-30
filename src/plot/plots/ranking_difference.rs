@@ -1,6 +1,6 @@
 use std::{fs, iter, path::Path};
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use plotters::{
     chart::ChartBuilder,
     prelude::{BitMapBackend, BitMapElement, IntoDrawingArea, Polygon},
@@ -9,7 +9,7 @@ use plotters::{
 use tracing::info;
 
 use crate::{
-    data::{Data, RatingKind, LOGO_FILENAME},
+    data::{Data, LOGO_FILENAME, RatingKind},
     plot::{
         color::{Color, ColorIterator},
         font::Font,
@@ -23,7 +23,7 @@ const COLOR_SPACING: usize = 10;
 const CURVE_POINTS: usize = (WIDTH - 2 * (MARGIN + Y_LABEL_AREA_SIZE)) as usize;
 const MARGIN: u32 = 64;
 const LOGO_MARGIN: i32 = 16;
-const Y_LABEL_AREA_SIZE: u32 = 384;
+const Y_LABEL_AREA_SIZE: u32 = 416;
 
 fn ease_in_out_cubic(x: f64) -> f64 {
     if x < 0.5 {
@@ -70,7 +70,7 @@ where
                 .name
                 .clone()
         })
-        .y_desc("Bonus Point Ranking")
+        .y_desc("Bonus Points Ranking")
         .label_style(Font::default())
         .axis_style(Color::FONT_PRIMARY)
         .draw()?;

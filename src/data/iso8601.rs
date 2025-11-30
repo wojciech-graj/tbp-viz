@@ -1,4 +1,4 @@
-#![allow(clippy::ref_option)]
+//#![allow(clippy::ref_option)]
 
 use serde::Deserialize;
 use time::Date;

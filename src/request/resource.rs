@@ -1,6 +1,6 @@
 use std::{fmt, fs, path::PathBuf, sync::Arc};
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use reqwest::Client;
 use tokio::sync::Semaphore;
 use tracing::info;

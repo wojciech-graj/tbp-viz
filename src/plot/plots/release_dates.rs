@@ -1,6 +1,6 @@
 use std::{f64::consts::PI, fs, path::Path, time::Duration};
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use plotters::{
     chart::ChartBuilder,
     prelude::{BitMapBackend, BitMapElement, Circle, IntoDrawingArea},

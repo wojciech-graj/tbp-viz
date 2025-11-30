@@ -6,12 +6,12 @@ mod serde_metas;
 use core::fmt;
 use std::{cmp::Reverse, collections::HashMap, env, fs, hash::Hash};
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use serde_with::skip_serializing_none;
-use time::{serde::timestamp, Duration, OffsetDateTime};
+use time::{Duration, OffsetDateTime, serde::timestamp};
 use tracing::info;
 
 use crate::request::{igdb::IgdbRequestor, resource::ResourceRequestor};
@@ -29,6 +29,12 @@ pub struct Lists(pub HashMap<Iso8601Date, List>);
 impl Lists {
     fn latest(&self) -> Option<&List> {
         self.0.iter().max_by_key(|(k, _)| *k).map(|(_, v)| v)
+    }
+
+    fn penultimate(&self) -> Option<&List> {
+        let mut keys: Vec<_> = self.0.keys().collect();
+        keys.sort();
+        keys.iter().rev().nth(1).and_then(|k| self.0.get(*k))
     }
 }
 
@@ -55,62 +61,6 @@ impl fmt::Display for GameId {
 }
 
 #[repr(u8)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize_repr, Deserialize_repr)]
-pub enum AgeRatingCategory {
-    Esrb = 1,
-    Pegi = 2,
-    Cero = 3,
-    Usk = 4,
-    Grac = 5,
-    ClassInd = 6,
-    Acb = 7,
-}
-
-#[repr(u8)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize_repr, Deserialize_repr)]
-pub enum AgeRatingRating {
-    Three = 1,
-    Seven = 2,
-    Twelve = 3,
-    Sixteen = 4,
-    Eighteen = 5,
-    Rp = 6,
-    Ec = 7,
-    E = 8,
-    E10 = 9,
-    T = 10,
-    M = 11,
-    Ao = 12,
-    CeroA = 13,
-    CeroB = 14,
-    CeroC = 15,
-    CeroD = 16,
-    CeroZ = 17,
-    Usk0 = 18,
-    Usk6 = 19,
-    Usk12 = 20,
-    Usk16 = 21,
-    Usk18 = 22,
-    GracAll = 23,
-    GracTwelve = 24,
-    GracFifteen = 25,
-    GracEighteen = 26,
-    GracTesting = 27,
-    ClassIndL = 28,
-    ClassIndTen = 29,
-    ClassIndTwelve = 30,
-    ClassIndFourteen = 31,
-    ClassIndSixteen = 32,
-    ClassIndEighteen = 33,
-    AcbG = 34,
-    AcbPG = 35,
-    AcbM = 36,
-    AcbMa15 = 37,
-    AcbR18 = 38,
-    AcbRc = 39,
-}
-
-#[repr(u8)]
 #[derive(Debug, Serialize_repr, Deserialize_repr)]
 pub enum PlatformCategory {
     Console = 1,
@@ -119,14 +69,6 @@ pub enum PlatformCategory {
     OperatingSystem = 4,
     PortableConsole = 5,
     Computer = 6,
-}
-
-#[skip_serializing_none]
-#[derive(Debug, Serialize, Deserialize)]
-pub struct AgeRating {
-    pub category: AgeRatingCategory,
-    pub rating: AgeRatingRating,
-    pub rating_cover_url: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -196,8 +138,6 @@ pub struct DateField {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Meta {
     pub id: GameId,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub age_ratings: Vec<AgeRating>,
     pub aggregated_rating: Option<f64>,
     pub aggregated_rating_count: Option<u32>,
     pub cover: Option<UrlField>,
@@ -290,7 +230,7 @@ impl Data {
                     Some(if matches!(id, GameId::Igdb(_)) {
                         Ok(id.clone())
                     } else {
-                        Err(anyhow!("Missing metadata for \"{}\"", id))
+                        Err(anyhow!("Missing metadata for \"{id}\""))
                     })
                 }
             })
@@ -402,6 +342,10 @@ impl Data {
 
     pub fn latest(&self) -> Option<&List> {
         self.lists.latest()
+    }
+
+    pub fn penultimate(&self) -> Option<&List> {
+        self.lists.penultimate()
     }
 
     pub fn release_date_range(&self) -> Option<(OffsetDateTime, OffsetDateTime)> {

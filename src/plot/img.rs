@@ -1,5 +1,5 @@
 use anyhow::Result;
-use image::{imageops::FilterType, DynamicImage};
+use image::{DynamicImage, imageops::FilterType};
 
 use super::color::Color;
 

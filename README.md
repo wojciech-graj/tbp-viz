@@ -2,9 +2,9 @@
 
 The Bonus Points is a podcast in which Oli and Joe play a new game every two weeks, and rank it on their personal list. All the data they have produced by doing this begs to be analyzed, hence why this project exists.
 
-All of the generated images can be found [here](https://w-graj.net/images/tgl-viz/).
+All of the generated images can be found [here](https://w-graj.net/images/tbp-viz/).
 
-![IMAGE](https://w-graj.net/images/tgl-viz/list_over_time.png)
+![IMAGE](https://w-graj.net/images/tbp-viz/list_over_time.png)
 
 ## Usage
 

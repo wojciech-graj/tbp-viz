@@ -22,3 +22,5 @@ tracing-subscriber = "0.3.19"
 
 [patch.crates-io]
 plotters = { path = "dep/plotters" }
+#time = { git = "https://github.com/wojciech-graj/time" }
+#time-macros = { git = "https://github.com/wojciech-graj/time" }
